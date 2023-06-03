@@ -1,24 +1,16 @@
 package com.mycompany.myapp.service.impl;
 
-import com.mycompany.myapp.SoundWavApp;
 import com.mycompany.myapp.domain.SoundWav;
 import com.mycompany.myapp.repository.SoundWavRepository;
 import com.mycompany.myapp.service.SoundWavService;
 
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.Optional;
 
 import com.mycompany.myapp.service.dto.SoundWavDTO;
-import it.sauronsoftware.jave.AudioAttributes;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
-import it.sauronsoftware.jave.EncodingAttributes;
-import it.sauronsoftware.jave.InputFormatException;
-import it.sauronsoftware.jave.MultimediaInfo;
+import com.mycompany.myapp.service.mapper.SoundWavMapper;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -38,9 +30,11 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 @Transactional
 public class SoundWaveServiceImpl implements SoundWavService {
     private  final SoundWavRepository soundWavRepository;
+    private  final SoundWavMapper soundWavMapper;
 
-    public SoundWaveServiceImpl(SoundWavRepository soundWavRepository) {
+    public SoundWaveServiceImpl(SoundWavRepository soundWavRepository, SoundWavMapper soundWavMapper) {
         this.soundWavRepository = soundWavRepository;
+        this.soundWavMapper = soundWavMapper;
     }
 
 
@@ -65,6 +59,12 @@ public class SoundWaveServiceImpl implements SoundWavService {
         }
 
         return null;
+    }
+
+    @Override
+    public Optional<SoundWavDTO> findOne(String id) {
+        return  soundWavRepository.findById(id)
+            .map(soundWavMapper::toDto);
     }
 
     public SoundWavDTO waveForm(String path) {

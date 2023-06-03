@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.service.AnomalyItemService;
 import com.mycompany.myapp.service.SoundWavService;
+import com.mycompany.myapp.service.dto.SoundWavDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import com.mycompany.myapp.service.dto.AnomalyItemDTO;
 import com.mycompany.myapp.service.dto.AnomalyItemCriteria;
@@ -147,5 +148,10 @@ public class AnomalyItemResource {
     public ResponseEntity<Boolean> saveSound(){
         soundWavService.saveWaveData();
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/sound-wav/{id}")
+    public ResponseEntity<SoundWavDTO> getSoundWav(@PathVariable String id){
+        return ResponseUtil.wrapOrNotFound(  soundWavService.findOne(id));
     }
 }
